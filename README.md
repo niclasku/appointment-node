@@ -4,7 +4,7 @@ This package allows you to display current shipments, images, videos and text ne
 All offered with an easy configuration interface that allows you to schedule your
 content. If there is nothing to show the display will turn off automatically.
 
-[![Import](https://cdn.infobeamer.com/s/img/import.png)](https://info-beamer.com/use?url=https://github.com/niclasku/appointment-screen)
+[![Import](https://cdn.infobeamer.com/s/img/import.png)](https://info-beamer.com/use?url=https://github.com/niclasku/appointment-node)
 
 ## Configuration Screen
 
