@@ -1,0 +1,7 @@
+{
+    "name": "Appointment Screen",
+    "author": "Niclas Kühnapfel <niclas-k@t-online.de>",
+    "desc": "Shows textual/image and video information for a appointment screen. Based on Florian Wesch's reception screen",
+    "repository": "https://github.com/niclasku/appointment-screen",
+    "version": "0.1"
+}

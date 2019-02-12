@@ -1,0 +1,63 @@
+#!/usr/bin/python2.7
+import time
+import sys
+import pytz
+import time
+from datetime import datetime, timedelta
+from hosted import CONFIG, DEVICE, NODE
+
+CONFIG.restart_on_update()
+tz = pytz.timezone('Europe/Berlin')
+
+def convert_weekday(x):
+    return {
+        'Mon': 'Mo',
+        'Tue': 'Di',
+        'Wed': 'Mi',
+        'Thi': 'Do',
+        'Fri': 'Fr',
+        'Sat': 'Sa',
+        'Sun': 'So'
+    }.get(x, 'Err')
+
+def current_time():
+    now = datetime.utcnow()
+    now = now.replace(tzinfo=pytz.utc)
+    now = now.astimezone(tz)
+    now = now.replace(tzinfo=None)
+    return now
+
+def send_clock(now):
+    seconds = (datetime.utcnow()-datetime(1970,1,1)).total_seconds()
+    date_string = now.strftime('%d.%m.%Y') + ' - ' +  now.strftime('%H:%M')
+    NODE.send('/clock/seconds:%f' % seconds)
+    NODE.send('/clock/human:%s' % date_string)
+
+def control_tv(now):
+    seconds = (datetime.utcnow()-datetime(1970,1,1)).total_seconds()
+    on = False
+    for item in CONFIG['pages']:
+        earlierTime = float(item['schedule']['earlierTime'])
+        laterTime = float(item['schedule']['laterTime'])
+        if earlierTime < seconds < laterTime:
+            on = True
+    dow = now.weekday()
+    hour = now.hour
+    hour = dow * 24 + hour
+    print >>sys.stderr, "Hour: %d" % hour
+    try:
+        if CONFIG['times'][hour] == False:
+            on = False
+    except IndexError:
+        print >>sys.stderr, "Index Error"
+    DEVICE.screen(on = on)
+
+def main():
+    while 1:
+        now = current_time()
+        send_clock(now)
+        control_tv(now)
+        time.sleep(20)
+
+if __name__ == "__main__":
+    main()
